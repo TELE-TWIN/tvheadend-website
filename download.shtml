@@ -1,0 +1,45 @@
+<!--#set var="title" value="Tvheadend - Download" -->
+<!--#set var="curpage" value="download" -->
+<!--#include virtual="header.shtml" -->
+
+
+<h2>Latest version</h2>
+<p>Read the <a href="http://www.lonelycoder.com/debian//dists/hts/main/binary-i386/hts-tvheadend_2.12_i386.changes"> 2.12 Changelog</a> for changes in 2.12 or read the <a href="https://github.com/andoma/tvheadend/blob/master/debian/changelog">full changelog</a> for all changes. Notice that the full changelog also contains entries that are to be released in the upcoming next release.</p>
+
+<p>Documentation is available <a href="/hts/tvheadend/docs/2_12/index.html">online</a>.</p>
+<p>Download:</p>
+<ul>
+<li><a href="http://www.lonelycoder.com/debian//dists/hts/main/binary-i386/hts-tvheadend_2.12_i386.deb"> hts-tvheadend_2.12_i386.deb</a> &#8212; Binary for Debian/Ubuntu 32bit.</li>
+<li><a href="http://www.lonelycoder.com/debian//dists/hts/main/binary-amd64/hts-tvheadend_2.12_amd64.deb"> hts-tvheadend_2.12_amd64.deb</a> &#8212; Binary for Debian/Ubuntu 64bit.</li>
+
+</ul>
+<p>Sourcecode:</p>
+<ul>
+<li><a href="http://www.lonelycoder.com/debian//dists/hts/main/source/hts-tvheadend_2.12.tar.gz"> hts-tvheadend_2.12.tar.gz</a> &#8212; Release tree.</li>
+</ul>
+
+<h2>Source code</h2>
+<p>The source for Tvheadend is hosted on github at <a href="https://github.com/andoma/tvheadend">https://github.com/andoma/tvheadend</a>
+
+<h2>Tvheadend on Debian &amp; Ubuntu</h2>
+<p>HTS has its own repository for Debian and Ubuntu systems, located here:</p>
+<p><code>deb http://www.lonelycoder.com/debian/ hts main</code></p>
+<p>A public key file for the repository is available <a href="https://github.com/downloads/andoma/hts/public.key">here</a>.</p>
+<p>You can either add this directly to your <em>/etc/apt/sources.list</em> or use the <a href="https://help.ubuntu.com/community/Repositories/Ubuntu#Adding%20Other%20Repositories">Software Center in Ubuntu</a> to add it.</p>
+
+<p>Once the respository has been setup you can install directly from a command line:<br />
+<code>sudo aptitude update<br />
+sudo aptitude install hts-tvheadend</code></p>
+<p>You can of course also install the package directly from Software Center if you prefer that.</p>
+<p>The install process will prompt you for a super username/password combination. You will need to configure this in order to log into the web interface. The user can not be changed or removed from within tvheadend itself. You can still add/remove new users but this special username/password will always grant full access to all features.</p>
+<p>If you need to change the username and/or password you can reconfigure the package. From a command line, execute:<br />
+<code>sudo dpkg-reconfigure hts-tvheadend</code></p>
+<p>Once you are all set, login to Tvheadend via the <a href="http://localhost:9981/" target="_blank">Built in web interface</a></p>
+
+<h2>Tvheadend on <a href="http://www.clearfoundation.com/">ClearOS</a></h2>
+
+Read a short install HOWTO <a href="http://www.clearfoundation.com/docs/howtos/tvheadend">here</a>
+</div>
+</div>
+
+<!--#include virtual="footer.shtml" -->

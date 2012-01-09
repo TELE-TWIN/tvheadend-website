@@ -1,0 +1,1054 @@
+<!--#set var="title" value="Tvheadend - Documentation" -->
+<!--#set var="curpage" value="documentation" -->
+<!--#include virtual="header.shtml" -->
+
+
+<div class="hts-doc-chapter">1 Overview</div>
+<div class="hts-doc-text">
+<p>
+
+
+<center>
+<h1>HTS Tvheadend 2.12</h1>
+&copy; 2006 - 2011, Andreas Öman, et al.<br><br>
+<img style="padding: 0px" src="docresources/tvheadendlogo.png">
+</center>
+
+Tvheadend is part of the <b>HTS</b> project hosted at
+<a href="http://www.lonelycoder.com/">http://www.lonelycoder.com/</a>
+<p>
+It functions primarily as a TV streaming back end for the Showtime Mediaplayer but
+can be used standalone for other purposes, such as a Digital Video Recorder.
+</div>
+<div class="hts-doc-section">1.1 List of features</div>
+<div class="hts-doc-text">
+
+<dl>
+
+ <dt>SDTV and HDTV support
+ <dd>H264 and MPEG2 video supported. AC-3, AAC(-HE) and MP2 audio supported. DVB subtitles supported.
+
+ <dt>Input sources
+  <dl>
+   <dt>DVB-T, DVB-C, DVB-S, DVB-S2 and ATSC.
+   <dd>
+   Multiple adapters are supported.
+   Each adapter can receive all programs available on the currently
+   tuned mux simultaneously.
+   </dd>
+   <dt>Multicasted IPTV.
+   <dd>
+   Both raw transport streams in UDP and transport stream in RTP in UDP 
+   is supported. The precense of RTP is autodetected.
+   </dd>
+   <dt>Analog TV
+   <dd>
+   Using the Video4Linux2 API. Currently, only PAL is supported.
+   </dd>
+  </dl>
+
+ <dt>Output targets
+  <dl>
+   <dt>HTSP (Home TV Streaming Protocol), supported by <a href="/showtime">Showtime Mediacenter</a> and <a href="http://www.xbmc.org/">XBMC</a>
+   <dt>The Built-in Digital Video Recorder
+   <dt>RTSP server
+  </dl>
+
+ <dt>Modern web user interface
+ <dd>
+ Entire application loaded into browser. No page refreshes or slow updates.
+ Based on <a href="http://www.extjs.com/">ExtJS</a>.
+
+ <dt>Easy to administrate and configure
+ <dd>
+ All setup and configuration is done from the built in web user interface.
+ Even so, all settings are stored in human readable text files.
+
+ <dt>Fully integrated with HTS Showtime Media player.
+ <dd>
+ All channel data and their grouping, EPG and TV streaming is conducted over a
+ single TCP connection.
+ 
+ <dt>Digital Video Recorder
+ <dd>
+ Built in video recorder stores recorded programs as
+ <a href="http://www.matroska.org/">Matroska (.mkv)</a> files.
+ Multiple simultaneous recordings are supported.
+ All original streams (multiple audio tracks, etc) are recorded.
+
+ <dt>Electronic Program Guide
+ <dd>
+ Imports data from DVB and <a href="http://www.xmltv.org">XMLTV</a>.
+ Searchable from the web user interface. Results can be scheduled
+ for recording with a single click.
+
+ <dt>Automatic recordings
+ <dd>
+ Create rule-sets manually or based on EPG queries that will record all future
+ programs matching the query. Great for recording your favorite TV-show(s).
+
+ <dt>Easy DVB setup
+ <dd>
+ Tvheadend includes list of all major DVB-T, DVB-C and DVB-S networks
+ around the globe. Just pick your location from a list. Next, it can
+ scan all services and only map those which can be correctly decoded. Avoids
+ having lots of unusable channels in your Media player.
+
+ <dt>Multi-user support
+ <dd>
+ Grant access to various system features based on 
+ username / password and/or IP address.
+
+ <dt>Software based CSA descrambling
+ <dd>
+ Requires a card server (newcamd and capmt protocol is supported).
+
+ <dt>Internationalization
+ <dd>
+ All text is encoded in UTF-8 to provide full international support. All major
+ character encodings in DVB is supported.
+</div>
+<div class="hts-doc-section">1.2 Install and initial setup</div>
+<div class="hts-doc-text">
+Parts of this documentation is also available in the Tvheadend man page.
+<p>
+<dl>
+ <dt>Starting Tvheadend
+ <dd>
+ If you already have Tvheadend up and running you can skip this part.
+ <p>
+ Command line options:
+ <dl>
+  <dt>-f
+  <dd>
+  Fork and become a background process (daemon). Default no.
+
+  <dt>-u username
+  <dd>
+  Run as 'username'. Only applicable if demonizing. Default is to
+  use the UID of 1 (daemon on most systems).
+
+  <dt>-g groupname
+  <dd>
+  Run as group 'groupname'. Only applicable if daemonizing. 
+  Default is to use the 'video' group. 
+  If the 'video' group does not exist, GID 1 (daemon) will be used.
+
+ </dl>
+
+
+ <dt>Default configuration
+ <dd>
+ All configuration in Tvheadend is maintained via its embedded web
+ server running on port 9981. Just point your browser to:
+ <p>
+ http://hostname:9981/
+ <p>
+
+ By default <b>everyone (also from remote hosts)is allowed full
+ access to all features / settings</b> in the web user interface. If
+ this is the first time you setup Tvheadend you are most encouraged to
+ enter the web user interface, selected the 'Configuration' + 'Access Control'
+ tab and make reasonable changes. Futher help / documentation can be obtained
+ inside the web interface.
+
+ <dt>Settings storage
+ <dd>
+  Settings are loaded/stored in $HOME/.hts/tvheadend.
+
+ <dt>Logging
+ <dd>
+ All activity inside tvheadend is logged to syslog using log facility.
+ Also, if logged in to the web interface you will receive the same log in the bottom
+ tab (System log).
+
+
+ <dt>Permission to access video adapters
+ <dd>
+ In order for Tvheadend to control video adapters on the system it
+ must be granted access to those devices. Most systems have a 'video'
+ group with write access to the video adapter devices. When Tvheadend
+ is started as a daemon (if Tvheadend is installed from a distribution package
+ this is most likely the way it is) it will change its primary group
+ to 'video' in order to access these groups. If your system is configured
+ in a different way you can either change the group membership of the
+ video adapters (/dev/dvb, etc) or reconfigure the Tvheadend start up
+ parameters.
+ <p>
+ If Tvheadend is started without the '-f' argument it will not demonize
+ nor change its primary UID/GID. Rather it will run with the permissions
+ granted to the user executing the binary. If that's the case you must make
+ sure the current user is granted with access to the video devices.
+
+
+ <dt>Open ports
+ <dd>
+ Tvheadend listens to the following TCP ports by default:
+ <ul>
+  <li>9981 - HTTP server (web interface)
+  <li>9982 - HTSP server (Streaming protocol)
+ </ul>
+ There is currently no way of disabling these TCP servers, nor bind the services to
+ specific interfaces or other ports.
+ To limit access, please read the section about 'Access Control' 
+ in the configuration chapter.
+
+</dl>
+</div>
+<div class="hts-doc-chapter">2 Electronic Program Guide</div>
+<div class="hts-doc-text">
+Tvheadend has a built in Electronic Program Guide. The EPG is an in memory
+database populated with all the information about events received from
+the DVB networks or from XMLTV.
+<p>
+The EPG tab displays a filterable paged grid containing all the events
+sorted based on start time.
+<img src="docresources/epg.png">
+<p>
+<dl>
+ <dt>Filtering (or searching)
+ <dd>
+ In the EPG top tool bar you can access four input fields.
+ These are used to filter/search for events. The form uses implicit AND
+ between the input fields. This means that all filters must match
+ for an event to be displayed.
+ <dl>
+  <dt>[Search title...]
+  <dd>
+  Filter on the event title. The filter uses case insensitive regular
+  expression. If you don't know what a regular expression is this means
+  that you can type just parts of the title and filter on that too.
+  (No need for exact matching).
+  <dt>[Only include channel...]
+  <dd>
+  Only display events from the selected channel.
+  <dt>[Only include tag...]
+  <dd>
+  Only display events from the channels which are included in the selected tag.
+  Tags are used for grouping channels and is configured by the administrator.
+  <dt>[Only include content...]
+  <dd>
+  Most DVB networks classify their events into content groups. This field
+  allows you to filter based on content type.
+ </dl>
+ Thus, if you only would like to browse Movies from your HD-channels you
+ would select 'HD channels' in the [Only include tag...]-field, and select
+ 'Movie / Drama' in the [Only include content...]-field.
+ <p>
+ Notice that you don't have to press a 'Search' button, the grid immediately
+ updates itself as you change the filters.
+ <p>
+ If you would like to clear all filters, just press the [Reset] button.
+
+ <dt>Paging
+
+ <dd>
+ In an installation with many (hundreds of) channels and full EPG feed from 
+ both DVB and XMLTV there will be tens of thousands of events in the database.
+ Therefore the EPG display employs a paging bar at the bottom of the grid.
+ Use it to browse backwards and forwards in the EPG. It also displays the
+ total amount of events matched by the current query.
+
+ <dt>Event details and recording
+ <dd>
+ If you click on a single event, a popup will display detailed information
+ about the event. It also allows the user to schedule the event for recording
+ by clicking on the [Record program] button.
+ <p>
+ <img src="docresources/epg2.png">
+ <p>
+ To close the popup, just close it with the [X] window button.
+ The popup is not modal and you can open as many detailed information popups
+ as you want.
+
+
+ <dt>Autorecordings
+ <dd>
+ Should you wish to record all events matching a specific query. (Record
+ your favorite TV-show, etc) you can press the 'Create Autorec' button
+ in the top toolbar.
+ <p>
+ A popup with details about the to-be-created autorecording rule needs to
+ be confirmed before the rule takes effect.
+ <p>
+ <img src="docresources/autorecpopup.png">
+ <p>
+ The autorecordings can later be changed/deleted in under the
+ 'Digital Video Recorder'-tag. Use that editor if you temporary want
+ to disable an autorecording or make adjustments, etc.
+</dl>
+</div>
+<div class="hts-doc-chapter">3 Digital Video Recorder</div>
+<div class="hts-doc-text">
+Under the 'Digital Video Recorder' tab you can administer and list status of
+individual recordings and configure rules for the automatic recorder.
+<p>
+To access the DVR tab you must be logged in sufficient access
+credentials.
+<p>
+For general configuration of the DVR (such as where and how to store
+the recordings, please see the DVR section in the configuration
+chapter)
+</div>
+<div class="hts-doc-section">3.1 DVR Log</div>
+<div class="hts-doc-text">
+The DVR log displays a paged grid containing all scheduled, current
+and completed recordings. The list is sorted based on start time.
+<p>
+Use the bottom toolbar (not displayed in this manual) to navigate
+between pages in the grid.
+<img src="docresources/dvrlog.png">
+<p>
+To see more details about a recorded event, just click on it and a pop
+up will appear:
+<p>
+<img src="docresources/dvrlogentry.png">
+<p>
+In this pop up you can cancel a scheduled recording or abort a
+recording in progress.  To close the pop up, just close it with the
+[X] window button.
+<p>
+Once the recording is completed there will be a clickable link to the
+recorded matroska file so you can download it directly from the
+interface.
+</div>
+<div class="hts-doc-section">3.2 DVR Autorecorder</div>
+<div class="hts-doc-text">
+The 'Automatic Recorder' is used to create rules that will trig
+automatic recording of events. You can use this to record you favorite
+TV show(s), record all movies on a specific channel, etc.
+<p>
+It's also possible to create a recording based on a query in the
+EPG. For more information about that, please read the EPG chapter.
+<p>
+<img src="docresources/autorec.png">
+<p>
+ The tags are listed / edited  in a grid. 
+
+ <ul>
+  <li>To edit a cell, double click on it. After a cell is changed it
+      will flags one of its corner to red to indicated that it has
+      been changed. To commit these changes back to Tvheadend press
+      the 'Save changes' button. In order to change a Checkbox cell
+      you only have to click once in it.
+
+  <li>To add a new entry, press the 'Add entry' button. The new
+      (empty) entry will be created on the server but will not be in
+      its enabled state.  You can now change all the cells to the
+      desired values, check the 'enable' box and then press 'Save
+      changes' to activate the new entry.
+
+  <li>To delete one or more entries, select the lines (by clicking
+      once on them), and press the 'Delete selected' button. A popup
+      will ask you to confirm your request.
+ </ul>
+
+<p>
+The columns have the following functions:
+
+
+ <dl>
+  <dt>Enabled
+  <dd>
+  If checked the rule is active. If unchecked the rule will not trig
+  any new recording sessions.
+
+  <dt>Title
+  <dd>
+  Only matches events with the given title. The filter uses case
+  insensitive regular expression.
+
+  <dt>Channel
+  <dd>
+  Only match events from the given channel.
+
+  <dt>Channel tag
+  <dd>
+  Only match events from the channels which are included in the given tag.
+  Tags are used for grouping channels and is configured by the administrator.
+
+  <dt>Content group
+  <dd>
+  Only match events belonging to the given content group.
+
+  <dt>Weekdays
+  <dd>
+  Only record events if they occur on one of these days. By default all days
+  are marked as active.
+
+  <dt>Starting around
+  <dd>
+  Only record events if they are scheduled +-15 minutes from this given time.
+
+  <dt>Created by
+  <dd>
+  Free text field, but will be copied to the recording session.
+
+  <dt>Comment
+  <dd>
+  Free text field, not used for anything else.
+ </dl>
+
+</div>
+<div class="hts-doc-chapter">4 Configuration and administration</div>
+<div class="hts-doc-text">
+
+<p>
+All configuration and administration of Tvheadend is conducted via the
+built in web user interface.
+
+<p>
+To access the configuration tab (and its sub panels) you need Admin-access.
+For details about access control, please see the 'Access-Control' section in this chapter.
+
+<p>
+Each subsystem of Tvheadend is configured via its own tab:
+
+<p>
+<img src="docresources/configtabs.png">
+
+</div>
+<div class="hts-doc-section">4.1 Access configuration</div>
+<div class="hts-doc-text">
+
+Setting up access control is an important initial step as the system initially is
+wide open.
+
+<img src="docresources/accessconfig.png">
+
+<p>
+When Tvheadend verifies access is scan thru all the enabled access control entries.
+The permission flags are combined for all matching access entries.
+An access entry is said to match if the username / password matches and the IP source
+address of the requesting peer is within the prefix.
+<p>
+
+The access rules are listed / edited  in a grid. 
+
+<ul>
+ <li>To edit a cell, double click on it. After a cell is changed it
+     will flags one of its corner to red to indicated that it has been
+     changed. To commit these changes back to Tvheadend press the 
+     'Save changes' button. In order to change a Checkbox cell you only
+     have to click once in it.
+
+ <li>To add a new entry, press the 'Add entry' button. The new (empty) entry
+     will be created on the server but will not be in its enabled state.
+     You can now change all the cells to the desired values, check the
+     'enable' box and then press 'Save changes' to activate the new entry.
+
+ <li>To delete one or more entries, select the lines (by clicking once on 
+     them), and press the 'Delete selected' button. A popup
+     will ask you to confirm your request.
+</ul>
+
+<p>
+The columns have the following functions:
+
+<dl>
+ <dt>Enabled
+ <dd>Make the entry participate in access control. If disabled, the entry
+     is inactive.
+
+  <dt>Username
+  <dd>
+  Name of user, if no username is needed for match it should contain a
+  single asterix (*).
+
+  <dt>Password
+  <dd>
+  Password to combine with user, if username is '*' (unused), the password
+  should be the same.
+
+  <dt>Prefix
+  <dd>
+  IPv4 prefix for matching based on source IP address.
+  If set to 0.0.0.0/0 it will match everything.
+
+  <dt>Streaming
+  <dd>
+  Enables access to streaming function. The 'streaming' access is enough to
+  make Showtime (over HTSP) work.
+
+  <dt>Video Recorder
+  <dd>
+  Enables access to all video recording functions. This also include administration
+  of the auto recordings.
+
+  <dt>Web interface
+  <dd>
+  Required for web user interface access. Also gives access to the EPG.
+
+  <dt>Admin
+  <dd>
+  Enables access to the Configuration tab.
+
+  <dt>Comment
+  <dd>
+  Allows the administrator to set a comment only visible in this editor.
+  It does not serve any active purpose.
+ </dl>
+
+<p>
+Let's also take a look at an example:
+<p>
+<img src="docresources/accessconfigexample.png">
+<p>
+First line gives clients originating from 192.168.0.0 - 192.168.0.255 network
+access to streaming functions. Typically you would use this for your
+local media players at home (All though Showtime can prompt for username & password
+in its HTSP client)
+<p>
+The second line adds a user with world wide access who might want to modify
+recordings, etc, perhaps from the job, or mobile phone.
+<p>
+The third line provide admin access to the 'admin' user. As an extra precaution this
+user is only allowed to log in from the home network.
+<p>
+
+</div>
+<div class="hts-doc-section">4.2 Channel configuration</div>
+<div class="hts-doc-text">
+
+ <img src="docresources/channeltab.png">
+
+ <div>
+ The channels are listed / edited  in a grid. 
+
+ <ul>
+  <li>To edit a cell, double-click on it. After a cell is changed it
+      will flags one of its corner to red to indicated that it has been
+      changed. To commit these changes back to Tvheadend press the 
+      'Save changes' button. In order to change a Checkbox cell you only
+      have to click once in it.
+
+  <li>To delete one or more entries, select the lines (by clicking once on 
+      them), and press the 'Delete selected' button. A popup
+      will ask you to confirm your request.
+ </ul>
+
+ <p>
+ The columns have the following functions:
+
+ <dl>
+  <dt>Number
+  <dd>Channel number. This is not used by Tvheadend internally, but rather
+      intended to be used by HTSP clients for mapping to remote control
+      buttons, presentation order, etc
+
+  <dt>Name
+  <dd>Name of the channel as presented in EPG and external interfaces.
+      Changing name of a channel does not interfere with scheduled
+      recordings etc.
+
+  <dt>XML-TV Source
+  <dd>Name of the XML-TV channel. If you have XML-TV enabled you can 
+      select which XML-TV channel to obtain data from. By default 
+      Tvheadend tries to match the name itself, but sometimes it might
+      not match between the XML-TV source and the TV provider so in
+      such cases you can change it yourself.
+
+  <dt>Tags
+  <dd>Each channel can be bound to a zero, one or many tags.
+      The tags are used for multiple things and it's up to you how
+      you wish to use and name them. Tags can be used to aid searching
+      in the EPG if you have many channels. The tags are also presented
+      in a Media player.
+
+  <dt>Icon
+  <dd>An URL pointing to an image representing the channel.
+      The icon URL will be set automatically when importing data from
+      XMLTV. This field allows the user to edit it manually.
+
+  <dt>DVR Pre-Start
+  <dd>Allows the user to specify an amount of extra time that should
+      be prepended to a recording scheduled on this channel.
+      In other words, if you type 5 here for a recording that is scheduled
+      for 20:00 will start to record at 19:55. This setting overrides the
+      Extra time before recordings DVR setting.
+
+  <dt>DVR Post-End
+  <dd>Similar to DVR Pre-Start this allows the user to add an extra
+      amount of time that should be appended to a recording.
+      In other words, if you type 5 here for a recording that is scheduled
+      to end 20:30 will stop to record at 20:35. This setting overrides the
+      Extra time after recordings DVR setting.
+
+  <dt>Merge button
+  <dd>If you have two channels that are actually the same you can
+      press the merge button on one of the channels to merge that into
+      another channel.  After the merge the channel you pressed this
+      function on will be removed and all services connected to it
+      will be added to the target channel.
+  </dl>
+ </div>
+ </div>
+<div class="hts-doc-section">4.3 XML-TV configuration</div>
+<div class="hts-doc-text">
+
+ <img src="docresources/xmltvtab.png">
+
+ <p>
+ This tab is used to configure XML-TV. For more information about XML-TV
+ and its use, please visit 
+ <a href="http://www.xmltv.org">http://www.xmltv.org</a>.
+
+ <p>
+ Configuration options:
+ <dl>
+  <dt>XML-TV Source
+  <dd>Select which grabber to use.
+      When the drop down list is pressed Tvheadend will issue a scan
+      for available grabbers on the host system. This result will be 
+      cached in the web user interface. Thus, if you need to rescan due to
+      a newly installed grabber you must reload the web interface. 
+      (There is no need to restart Tvheadend itself).
+
+      When you select a grabber more information will pop up regarding
+      further configuration of the grabber.
+
+  <dt>Grab interval
+  <dd>Hours between each grab.
+
+  <dt>Enable grabbing
+  <dd>Uncheck this if you wish to disable grabbing.
+  </dl>
+  Changes to any of these settings must be confirmed by pressing the
+  'Save configuration' button before taking effect.
+
+ </div>
+<div class="hts-doc-section">4.4 Tags configuration</div>
+<div class="hts-doc-text">
+
+ <img src="docresources/tagstab.png">
+
+ <p>
+ This tab is used to configure channel tags.
+ Tags are used to define a set of channels.
+ Notice that nothing prohibits a channel to be a member of multiple tags.
+ Also, there is no requirement to configure tags for running Tvheadend 
+ itself. It is, however, required if you run Tvheadend together with Showtime.
+ <p>
+ The tag-sets are used for:
+ <ul>
+  <li>Searches in the EPG.
+  <li>Display of channel groups in the Showtime Media player.
+ </ul>
+
+ <p>
+ The tags are listed / edited  in a grid. 
+
+ <ul>
+  <li>To edit a cell, double click on it. After a cell is changed it
+      will flags one of its corner to red to indicated that it has been
+      changed. To commit these changes back to Tvheadend press the 
+      'Save changes' button. In order to change a Checkbox cell you only
+      have to click once in it.
+
+  <li>To add a new entry, press the 'Add entry' button. The new (empty) entry
+      will be created on the server but will not be in its enabled state.
+      You can now change all the cells to the desired values, check the
+      'enable' box and then press 'Save changes' to activate the new entry.
+
+  <li>To delete one or more entries, select the lines (by clicking once on 
+      them), and press the 'Delete selected' button. A pop up
+      will ask you to confirm your request.
+ </ul>
+
+ <p>
+ The columns have the following functions:
+
+ <dl>
+  <dt>Enabled
+  <dd>Make the tag available in the rest of the system. If the tag is
+      not enabled it is only presented in this grid for the administrator.
+
+  <dt>Name
+  <dd>Name of the tag. Changing the tag name does not interfere with any
+      automatic recordings, groups, etc.
+
+  <dt>Internal
+  <dd>Tags are exported via HTSP (to the Showtime Media player) and used
+      there for grouping of TV channels. If you do not wish to export a
+      tag you can flag it as internal only.
+
+  <dt>Icon
+  <dd>Full path to an icon used to depict the tag. This can be a TV network
+      logotype, etc.
+
+  <dt>Icon has title
+  <dd>If set, presentation of the tag icon will not superimpose the tag
+      name on top of the icon.
+
+  <dt>Comment
+  <dd>Allows the administrator to set a comment only visible in this editor.
+      It does not serve any active purpose.
+ </dl>
+</div>
+<div class="hts-doc-section">4.5 Digital Video Recorder configuration</div>
+<div class="hts-doc-text">
+
+ <img src="docresources/configdvrtab.png">
+
+ <p>
+ This tab is used to configure operation of the Digital Video Recorder.
+ It is not used for scheduling or administration of individual recordings.
+
+ <p>
+ Configuration options:
+ <dl>
+  <dt>Recording system path
+  <dd>Path to where Tvheadend will write recorded events. If components of
+      the path does not exist, Tvheadend will try to create them.
+
+  <dt>DVR Log retention time (days)
+  <dd>Time that Tvheadend will keep information about the recording in
+      its internal database. Notice that the actual recorded file will not
+      be deleted when the log entry is deleted.
+
+  <dt>Make sub-directories per day
+  <dd>If checked, Tvheadend will create a new directory per day in the
+      recording system path. Only days when anything is recorded will be 
+      created. The format of the directory will be 'YYYY-MM-DD' (ISO standard)
+
+  <dt>Make sub-directories per channel
+  <dd>If checked, Tvheadend will create a directory per channel when storing
+      events. If both this and the 'directory per day' checkbox is enabled,
+      the date-directory will be parent to the per-channel directory.
+
+  <dt>Make sub-directories per title
+  <dd>If checked, Tvheadend will create a directory per title when storing
+      events. If the day/channel directory checkboxes are also enabled, those
+      directories will be parents of this directory.
+
+  <dt>Include channel name in title
+  <dd>If checked, Tvheadend will include the name of the channel in the
+      event title. This applies to both the titled stored in the file
+      and to the file name itself.
+
+  <dt>Include date in title
+  <dd>If checked, Tvheadend will include the date for the recording in the
+      event title. This applies to both the titled stored in the file
+      and to the file name itself.
+
+  <dt>Include time in title
+  <dd>If checked, Tvheadend will include the time for the recording in the
+      event title. This applies to both the titled stored in the file
+      and to the file name itself.
+
+  <dt>Include episode in title
+  <dd>If checked, Tvheadend will include the season and episode in the
+      title (if such info is available).
+
+  <dt>Post-processor command
+  <dd>Command to run after finishing a recording. The command will be
+      run in background and is executed even if a recording is aborted
+      or an error occurred. Use the %e error formatting string to check
+      for errors, the error string is empty if recording finished
+      successfully.
+      <br><br>
+      Support format strings:<br>
+      <table class="hts-doc-text" border="0">
+        <tr><th>Format</th><th>Description</th><th>Example value</th></tr>
+        <tr><td>%f</td><td>Full path to recording</td><td>/home/user/Videos/News.mkv</td></tr>
+        <tr><td>%b</td><td>Basename of recording</td><td>News.mkv</td></tr>
+        <tr><td>%c</td><td>Channel name</td><td>BBC world</td></tr>
+        <tr><td>%C</td><td>Who created this recording</td><td>user</td></tr>
+        <tr><td>%t</td><td>Program title</td><td>News</td></tr>
+        <tr><td>%d</td><td>Program description</td><td>News and stories...</td></tr>
+        <tr><td>%e</td><td>Error message</td><td>Aborted by user</td></tr>
+        <tr><td>%S</td><td>Start time stamp of recording, UNIX epoch</td><td>1224421200</td></tr>
+        <tr><td>%E</td><td>Stop time stamp of recording, UNIX epoch</td><td>1224426600</td></tr>
+      </table>
+      <br>
+      Example usage: /path/to/ffmpeg -i %f -vcodec libx264 -acodec copy "/path/with white space/%b"<br>
+      You need to use quotes or escape white spaces if you want white spaces in an argument.
+ </dl>
+ Changes to any of these settings must be confirmed by pressing the
+ 'Save configuration' button before taking effect.
+</div>
+<div class="hts-doc-section">4.6 DVB configuration</div>
+<div class="hts-doc-text">
+
+<dl>
+ <dt>General tab</dt>
+  The general tab contains information and some per-adapter global
+  configuration.
+
+ <dl>
+  <dt>Add DVB Network by location...
+  <dd>
+  Pressing this button will popup a window that allows the user to select
+  a DVB network based on location. The adapter will be populated with
+  multiplexes from these networks and immediately start to scan for services.
+
+  <dt>Map DVB services to channels...
+  <dd>
+  Pressing this button will start a process that scans all services on all
+  multiplexes and tries to verify if the service is actually a working
+  TV channel. If so, the channel will be created and mapped to this service.
+  You can start mapping services to channels once all muxes have been 
+  processed. Until then the option will be disabled.
+
+  <dt>Adapter name
+  <dd>
+  You can change the display name for the adapter.
+
+  <dt>Autodetect muxes
+  <dd>
+  The DVB transmissions contains information about other muxes available
+  on the same network. If this checkbox is enabled, Tvheadend will 
+  automatically create new muxes as it receives configuration for them
+  via the DVB networks.
+
+  <dt>Idle scanning
+  <dd>
+  When nothing else happens Tvheadend will continuously rotate among all
+  muxes and tune to them to verify that they are still working. 
+  If your adapter have problems with lots of tuning, try to disable this.
+
+  <dt>Detailed logging
+  <dd>
+  If this is enabled, Tvheadend will log more information related to
+  this specific adapter. You might wanna enable this if you have some
+  kind of issues in order to better diagnose the problems.
+ </dl>
+</dl>
+
+<dl>
+ <dt>Multiplexes tab</dt>
+ All multiplexes on the currently selected adapter are listed and can be
+ edited in a grid. 
+
+ <ul>
+  <li>To edit a cell, double-click on it. After a cell is changed it
+      will flags one of its corner to red to indicated that it has been
+      changed. To commit these changes back to Tvheadend press the 
+      'Save changes' button. In order to change a Checkbox cell you only
+      have to click once in it.
+
+  <li>To delete one or more entries, select the lines (by clicking once on 
+      them), and press the 'Delete selected' button. A popup
+      will ask you to confirm your request. Note, that if you have 
+      automatic mux discovery enabled the mux will probably come back
+      quite soon.
+ </ul>
+
+ The columns have the following functions:
+
+ <dl>
+  <dt>Enabled
+  <dd>Uncheck this if a multiplex is of no interest to you or otherwise
+      temporary broken
+
+  <dt>Network
+  <dd>Network name as given in the DVB stream. Can not be changed
+
+  <dt>Frequency
+  <dd>Center frequency for the mux. Can not be changed
+
+  <dt>Modulation
+  <dd>Information about the modulation used on the mux. Can not be changed
+
+  <dt>Mux id
+  <dd>Unique ID for this mux in the dvb network. Can not be changed
+
+  <dt>Quality
+  <dd>Tvheadend's estimated quality for the mux.
+ </dl>
+</dl>
+
+<dl>
+ <dt>Services tab</dt>
+ All services on the currently selected adapter are listed and can be
+ edited in a grid. 
+
+ <ul>
+  <li>To edit a cell, double-click on it. After a cell is changed it
+      will flags one of its corner to red to indicated that it has been
+      changed. To commit these changes back to Tvheadend press the 
+      'Save changes' button. In order to change a Checkbox cell you only
+      have to click once in it.
+
+  <li>Service can not be deleted since they are directly inherited /
+      discovered from a mux they will reappear in just a few seconds
+      should one delete them.
+ </ul>
+
+ <p>
+ The columns have the following functions:
+
+ <dl>
+  <dt>Enabled
+  <dd>Uncheck this if a service is of no interest to you or otherwise
+      temporary broken
+
+  <dt>Service name
+  <dd>Service name as given in the DVB stream. Can not be changed
+
+  <dt>Channel name
+  <dd>Double-click on this column to map the service to a channel.
+
+  <dt>Type
+  <dd>Type of service. Can not be changed
+
+  <dt>Provider
+  <dd>Provider as given in the DVB stream. Can not be changed
+
+  <dt>Network
+  <dd>Network name for the mux this service resides on
+
+  <dt>Multiplex
+  <dd>Center frequency for the multiplex this service resides on
+
+  <dt>Information button
+  <dd>Press this to get a popup with more information about the service
+ </dl>
+
+ <p>
+ A word about DVB adapters
+ <p>
+ A DVB adapter represents a piece of hardware attached to the system.
+ DVB receivers with dual tuners will present themselves as two adapters
+ to the Tvheadend application. Tvheadend support DVB-T, DVB-C and DVB-S
+ adapters.
+ <p>
+ There is currently no way of adding a new adapter to Tvheadend when running.
+ If a new adapter is plugged into the system Tvheadend needs to be restarted
+ in order to detect it.
+ <p>
+ If Tvheadend has configuration for an adapter and the adapter is missing
+ upon start-up the configuration will be left untouched in case the adapter
+ will be back in the future. There is currently no way to remove configuration
+ for a no longer present adapter.
+ <p>
+ Warning: Unplugging an DVB adapter (USB, etc) during operation (i.e when
+ Tvheadend is running) can result in deadlocking the kernel USB subsystem,
+ most likely requiring a system restart.
+ <p>
+ Warning2: Suspending a system is (from a USB driver perspective) equivalent
+ to a unplug/insert event. Thus, suspending a system running Tvheadend
+ with USB adapters is not recommended at the moment.
+</dl>
+
+</div>
+<div class="hts-doc-section">4.7 CWC configuration</div>
+<div class="hts-doc-text">
+
+ Tvheadend support connecting to card servers for so called softcam descrambling.
+
+ <p>
+ <img src="docresources/configcwc.png">
+
+ <p>
+ The servers are listed / edited  in a grid. 
+
+ <ul>
+  <li>To edit a cell, double click on it. After a cell is changed it
+      will flags one of its corner to red to indicated that it has been
+      changed. To commit these changes back to Tvheadend press the 
+      'Save changes' button. In order to change a Checkbox cell you only
+      have to click once in it.
+
+  <li>To add a new entry, press the 'Add entry' button. The new (empty) entry
+      will be created on the server but will not be in its enabled state.
+      You can now change all the cells to the desired values, check the
+      'enable' box and then press 'Save changes' to activate the new entry.
+
+  <li>To delete one or more entries, select the lines (by clicking once on 
+      them), and press the 'Delete selected' button. A pop up
+      will ask you to confirm your request.
+ </ul>
+
+ <p>
+ The columns have the following functions:
+
+ <dl>
+  <dt>Enabled
+  <dd>If selected, connection will be tried to be established and retained up.
+      If unselected, Tvheadend will disconnect (if connected) and not try to reconnect.
+
+  <dt>Hostname
+  <dd>Server hostname. DNS lookup is performed upon every connection attempt.
+
+  <dt>Port
+  <dd>Server TCP port
+
+  <dt>Username
+  <dd>Username to use.
+
+  <dt>Password
+  <dd>Password to use.
+
+  <dt>DES Key
+  <dd>Initial DES key.
+
+  <dt>Update Card
+  <dd>Forward Entitlement Management Messages (EMMs) to the server.
+
+  <dt>Comment
+  <dd>Allows the administrator to set a comment only visible in this editor.
+      It does not serve any active purpose.
+ </dl>
+</div>
+<div class="hts-doc-section">4.8 Capmt Connections</div>
+<div class="hts-doc-text">
+
+  Tvheadend support connecting to card clients via the capmt protocol for so called softcam descrambling. 
+
+ <p>
+ <img src="docresources/configcapmt.png">
+
+ <p>
+ The servers are listed / edited  in a grid. 
+
+ <ul>
+  <li>To edit a cell, double click on it. After a cell is changed it
+      will flags one of its corner to red to indicated that it has been
+      changed. To commit these changes back to Tvheadend press the 
+      'Save changes' button. In order to change a Checkbox cell you only
+      have to click once in it.
+
+  <li>To add a new entry, press the 'Add entry' button. The new (empty) entry
+      will be created on the server but will not be in its enabled state.
+      You can now change all the cells to the desired values, check the
+      'enable' box and then press 'Save changes' to activate the new entry.
+
+  <li>To delete one or more entries, select the lines (by clicking once on 
+      them), and press the 'Delete selected' button. A pop up
+      will ask you to confirm your request.
+ </ul>
+
+ <p>
+ The columns have the following functions:
+
+ <dl>
+  <dt>Enabled
+  <dd>If selected, connection will be tried to be established and retained up.
+      If unselected, Tvheadend will disconnect (if connected) and not try to reconnect.
+
+  <dt>Camd.socket Filename
+  <dd>Socket filename which is usually opened by cam client. Tvheadend
+      tries to connect to this socket file.
+
+  <dt>Listenport
+  <dd>If running on a so called full-featured DVB-Card this can be left
+      empty.
+      Running on Budget-Cards one has to use a dummy ca-device. This is
+      emulated via capmt_ca.so. This module has to be pre-loaded prior to
+      the cam client.
+      <dl>
+        <dt>LD_PRELOAD=/path/to/capmt_ca.so cam_client &
+      </dl>
+      This module will communicate the received control-words back to
+      Tvheadend via Port 9000
+
+  <dt>Comment
+  <dd>Allows the administrator to set a comment only visible in this editor.
+      It does not serve any active purpose.
+ </dl>
+</div>
+</div>
+</div>
+
+<!--#include virtual="footer.shtml" -->

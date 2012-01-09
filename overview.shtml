@@ -1,0 +1,84 @@
+<!--#set var="title" value="Tvheadend" -->
+<!--#set var="curpage" value="overview" -->
+<!--#include virtual="header.shtml" -->
+
+<p>
+<img style="float:left; padding-right:20px" src="images/tvheadendlogo.png"/>
+</p>
+<div>
+<p>Tvheadend is a TV streaming server for Linux supporting DVB-S, DVB-S2, DVB-C, DVB-T, ATSC, IPTV, and Analog video (V4L) as input sources.</p>
+
+<p>It also comes with a powerful and easy to use web interface both used for configuration and day-to-day operations, such as searching the <a href="http://en.wikipedia.org/wiki/EPG">EPG</a> and scheduling recordings.</p>
+
+<p>Even so, the most notable feature of Tvheadend is how easy it is to set up: Install it, navigate to the web user interface, drill into the TV adapters tab, select your current location and Tvheadend will start scanning channels and present them to you in just a few minutes</p>
+
+<p>For the full list of features see the <a href="${TVHDOCS}">documentation</a>.</p>
+
+</div>
+
+<div style="clear:both"></div>
+
+<h2>Screenshots</h2>
+
+<p>Click icons for larger images</p>
+
+<a href="images/tvheadend_channels.png" target="_blank">
+<img class="screenshoticon" src="images/tvheadend_channels_small.png">
+</a>
+
+<a href="images/tvheadend_epg.png" target="_blank">
+<img class="screenshoticon" src="images/tvheadend_epg_small.png">
+</a>
+
+<a href="images/tvheadend_dvbmuxes.png" target="_blank">
+<img class="screenshoticon" src="images/tvheadend_dvbmuxes_small.png">
+</a>
+
+<div style="clear:both">
+
+</div>
+
+<h2>Quotes</h2>
+Some comments received on the mailing list and IRC from users of Tvheadend:
+<ul>
+
+<li>
+"Thanks for this wonderful piece of software so far. It's an ideal solution for my setup at home."
+</li>
+
+<li>
+"I just wanted to tell that you have written an awesome piece of software! I've been looking for something like TVHeadend for ages.."
+</li>
+
+<li>
+"First i want to thank the developer for making this excellent piece of software available. I have recently tested several other alternatives, and tvheadend is by far the most stable and easy to set up for my configuration. (TT-Budget 3200-s2)."
+</li>
+
+<li>
+"I must say, this is the, by far, most user-friendly dvb-c setup I've ever used..."
+</li>
+
+<li>
+"[Tvheadend...] was like plug and play. mythtv setup ~2weeks, vdr ~1week, tvheadend like 20minutes"
+</li>
+
+<li>
+"Btw, awesome job on tvheadend andreas, you saved a lot of people around here from the hell that is mythtv"
+</li>
+
+</ul>
+
+
+<h2>iPhone client</h2>
+
+<p>
+<img style="float:left; padding-right:20px" src="images/tvhremote.png"/>
+</p>
+
+<div>
+
+<p>Have an iPhone and an installation of Tvheadend? Then you certainly need the <a href="http://itunes.com/apps/TvhRemote">Tvheadend iPhone client</a>. Search the EPG and schedule recordings when you are away from home. You need to have at least Tvheadend 2.7 installed to use the iPhone app.</p>
+</div>
+
+
+<!--#include virtual="footer.shtml" -->
