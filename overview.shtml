@@ -12,7 +12,7 @@
 
 <p>Even so, the most notable feature of Tvheadend is how easy it is to set up: Install it, navigate to the web user interface, drill into the TV adapters tab, select your current location and Tvheadend will start scanning channels and present them to you in just a few minutes</p>
 
-<p>For the full list of features see the <a href="${TVHDOCS}">documentation</a>.</p>
+<p>For the full list of features see the <a href="documentation">documentation</a>.</p>
 
 </div>
 
